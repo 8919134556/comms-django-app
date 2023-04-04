@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+{% load static %}
+{% load mathfilters %}
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta http-equiv="Refresh" content="5">
+  <title>Updaters</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="{% static 'img/monitor.png' %}" rel="icon">
+  <script src="{% static 'js/sweetalert.js' %}"></script>
+  <!-- <script src="http://code.jquery.com/jquery-latest.js"></script>
+  <script type="text/javascript">
+      setInterval("my_function();",2000); 
+      function my_function(){
+        $('#ref').load(location.href + ' #tme');
+      }
+    </script> -->
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600;1,700&family=Roboto:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Work+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+    rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+
+
+  <!-- Template Main CSS File -->
+  <link href="{% static 'css/main.css' %}" rel="stylesheet">
+  <link href="{% static 'css/style.css' %}" rel="stylesheet" />
+  <!-- <link href="{% static 'css/but.css' %}" rel="stylesheet" /> -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css">
+  <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap4.min.css">
+  
+
+
+</head>
+
+<body>
+
+  <!-- ======= Header ======= -->
+  <header id="header" class="header d-flex align-items-center">
+    <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
+
+      <a href="index.html" class="logo d-flex align-items-center">
+        <!-- Uncomment the line below if you also wish to use an image logo -->
+        <!-- <img src="assets/img/logo.png" alt=""> -->
+        <h1><span style="color: blue;">INFO</span> <span style="color: red;">TRACK</span></h1>
+      </a>
+
+      <i class="mobile-nav-toggle mobile-nav-show bi bi-list"></i>
+      <i class="mobile-nav-toggle mobile-nav-hide d-none bi bi-x"></i>
+      <nav id="navbar" class="navbar">
+        <ul>
+          <li>
+            <form id="form_submit" method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              <select name="name" id="myselect" onchange="this.form.submit()">
+                <option>-----select server -----</option>
+                {% for i in list %}
+                  <option value="{{i.server_name}}">{{i.server_name}}</option>
+                  {% endfor %}
+              </select>
+          </form>
+          </li>
+          
+          <li><a  href="{% url 'comm_tools' %}">Comms</a></li>
+          <li><a class="active" href="#">Updater</a></li>
+          <li><a href="{% url 'sql_jobs' %}">SQL Jobs</a></li>
+          <li><a href="#">{{user_name}}</a></li>
+          <li><a href="{% url 'user_logout' %}">Logout</a></li>
+          
+        
+        </ul>
+      </nav>
+
+    </div>
+  </header>
+
+  <!-- ======= Hero Section ======= -->
+  <section id="hero" class="hero">
+
+    <div class="info d-flex">
+      <div class="container" style="margin-top: 5%; width: 100%;">
+        <div class="row ">
+          <h3 class="text-center" style="margin-top: 6%; color: wheat;">{{svr}} Updaters Running</h3>
+        <table class="table table-bordered " style="margin-top: 30px; width: 100%;" id="example">
+          <thead>
+            <tr class="text-white">
+              <th>
+                S.No
+              </th>
+              <th class="text-center">
+                Names
+              </th>
+              <th class="text-center">
+                Status
+              </th>
+              <th class="text-center">
+                Polling
+              </th>
+              
+              <th class="text-center">
+                Date
+              </th>
+
+            </tr>
+          </thead>
+          <tbody id="ref">
+            {% for i, j in view %}
+            
+            <tr id="tme" enctype="text/plain">
+              <td class="text-white">{{forloop.counter}}</td>
+              <td>
+                <p>{{i}}</p>
+              </td>
+              <td style="width: 15%;">
+                {% if i in view1 %}
+                <div>
+                  <span class="status online">
+                    <p style="margin-left: 25px; margin-right: 5px;">Running</p>
+                  </span>
+                </div>
+                {% else %}
+                <div>
+                  <span class="status offline">
+                    <p style="margin-left: 25px;">Stopped</p>
+                  </span>
+                </div>
+                {% endif %}
+              </td>
+              <td class="text-center">
+                {% with x=current_date %}
+                {% with y=j|date:'H:i'%}
+                {% with a=x|slice:"3:5"%}
+                {% with b=y|slice:"3:5"%}
+                {% with c=x|slice:"2"|mul:60|add:a %}
+                {% with d=y|slice:"2"|mul:60|add:b %}
+                {% with z=c|sub:d %}
+
+                {% if i in view1 %}
+
+                  {% if z < 10 and j|date:'Y-m-d' == today_date %} 
+                  
+                  <div class="heart-rate">
+                    <svg version="1.0" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
+                      y="0px" width="150px" height="30px" viewBox="10 10 150 73" enable-background="new 0 0 150 73"
+                      xml:space="preserve">
+                      <polyline fill="none" stroke="#05f22c" stroke-width="3" stroke-miterlimit="15"
+                        points="0,45.486 38.514,45.486 44.595,33.324 50.676,45.486 57.771,45.486 62.838,55.622 71.959,9 80.067,63.729 84.122,45.486 97.297,45.486 103.379,40.419 110.473,45.486 150,45.486 180,45.486 190,9 200,63.729 210,40.419 220,44.595" />
+                    </svg>
+                    <div class="fade-in">
+                    </div>
+                      
+                  </div>
+                  
+                  {% else %}
+                  
+                  <div class="heart-rate">
+                    <svg width="130px" height="30px" viewBox="50 60 150 100" xmlns="http://www.w3.org/2000/svg">
+                      <line x1="10" y1="100" x2="400" y2="100" style="stroke: red; stroke-width: 5; margin-bottom : 50px; " />
+                      <div class="fade-in">
+                      </div>
+                      <audio hidden id="audio" controls>
+                        <source src="{% static 'img/beep sound.mp3' %}" type="audio/mpeg" >
+                      </audio>
+                  </div>
+                    
+                  <!-- <script>
+                    var snd = document.getElementById("audio")
+                    snd.play();
+                    setTimeout(function() {alert("{{i}} has no polling")}, 3000);
+                  </script> -->
+                    
+                    
+
+                      
+                  {% endif %}
+                {% else %}
+                <p>service Offline</p>
+                {% endif %}
+
+                {% endwith %}
+                {% endwith %}
+                {% endwith %}
+                {% endwith %}
+                {% endwith %}
+                {% endwith %}
+                {% endwith %}
+
+              </td>
+              
+              <td class="text-center">
+                <p>{{j}}</p>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <script>
+          $(document).ready(function () {
+              $('#example').DataTable();
+          });
+        </script>
+        </div>
+      </div>
+    </div>
+
+    <div id="hero-carousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+
+      <div class="carousel-item active" style="background-image: url(../../static/img/556.jpg)">
+      </div>
+      
+
+    </div>
+    <div id="hero-carousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+
+      <div class="carousel-item active" style="background-image: url(../../static/img/556.jpg);">
+      </div>
+      
+
+    </div>
+  </section>
+
+  
+
+  <!-- Template Main JS File -->
+  <script src="{% static 'js/main.js' %}"></script>
+  <script>
+    {% for msg in messages %} 
+      swal("Server Response", "{{msg}}");
+   {% endfor %} 
+  </script>
+
+</body>
+
+</html>

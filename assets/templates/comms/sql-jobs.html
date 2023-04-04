@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+{% load static %}
+{% load mathfilters %}
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>SQL-JOBS</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="{% static 'img/monitor.png' %}" rel="icon">
+  <script src="{% static 'js/sweetalert.js' %}"></script>
+  <!-- <script src="http://code.jquery.com/jquery-latest.js"></script> -->
+      <!-- <script type="text/javascript">
+        setInterval("my_function();",5000); 
+        function my_function(){
+          $('#refresh').load(location.href + ' #time');
+        }
+      </script> -->
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600;1,700&family=Roboto:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Work+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+    rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+
+
+  <!-- Template Main CSS File -->
+  <link href="{% static 'css/main.css' %}" rel="stylesheet">
+  <link href="{% static 'css/style.css' %}" rel="stylesheet" />
+  <!-- <link href="{% static 'css/but.css' %}" rel="stylesheet" /> -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css">
+  <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap4.min.css">
+  
+
+
+</head>
+
+<body>
+
+  <!-- ======= Header ======= -->
+  <header id="header" class="header d-flex align-items-center">
+    <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
+
+      <a href="index.html" class="logo d-flex align-items-center">
+        <!-- Uncomment the line below if you also wish to use an image logo -->
+        <!-- <img src="assets/img/logo.png" alt=""> -->
+        <h1><span style="color: blue;">INFO</span> <span style="color: red;">TRACK</span></h1>
+      </a>
+
+      <i class="mobile-nav-toggle mobile-nav-show bi bi-list"></i>
+      <i class="mobile-nav-toggle mobile-nav-hide d-none bi bi-x"></i>
+      <nav id="navbar" class="navbar">
+        <ul>
+          <li>
+            <form id="form_submit" method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              <select name="name" id="myselect" onchange="this.form.submit()">
+                <option>-----select server -----</option>
+                {% for i in list %}
+                  <option value="{{i.server_name}}">{{i.server_name}}</option>
+                  {% endfor %}
+              </select>
+          </form>
+          </li>
+          
+          <li><a  href="{% url 'comm_tools' %}">Comms</a></li>
+          <li><a  href="{% url 'updater' %}">Updater</a></li>
+          <li><a class="active" href="#">SQL Jobs</a></li>
+          <li><a href="#">{{user_name}}</a></li>
+          <li><a href="{% url 'user_logout' %}">Logout</a></li>
+          
+        
+        </ul>
+      </nav>
+
+    </div>
+  </header>
+
+  <!-- ======= Hero Section ======= -->
+  <section id="hero" class="hero">
+    
+    <div class="info d-flex">
+      <div class="container" style="margin-right: 30%; margin-top: 9%; width: 100%;">
+        
+          <div class="row" style="margin-left: 5%; width: 100%; color: aliceblue;" >
+          <h3 class="text-center" style="color: wheat; margin-left: 15%; margin-bottom: 5%;">{{svr}} SQL Jobs Running</h3>
+          <table id="example" class="table table-bordered text-white" style="width:100%;">
+            <thead>
+                <tr>
+                    <th>S.No</th>
+                    <th>Job Name</th>
+                    <th>Schedule Name</th>
+                    <th>_____________Time______________</th>
+                    <th>Job Enabled</th>
+                    <th>Freq Recurrence Factor</th>
+                    <th>Frequency</th>
+                    <th>Days</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+              {% for i in view %}
+                <tr>
+                  <td>{{forloop.counter}}</td>
+                    <td><p id="{{i.job_name}}">{{i.job_name}}</p>
+                      <script>
+                        var str = document.getElementById("{{i.job_name}}").innerHTML;
+                        var res = str.replace(/_/g, " ");
+                        document.getElementById("{{i.job_name}}").innerHTML = res;
+                      </script>
+                    </td>
+
+                    <td><p id="{{i.schedule_name}}">{{i.schedule_name}}</p>
+                      <script>
+                        var str = document.getElementById("{{i.schedule_name}}").innerHTML;
+                        var res = str.replace(/_/g, " ");
+                        document.getElementById("{{i.schedule_name}}").innerHTML = res;
+                      </script>
+                    </td>
+
+                    <td><p id="{{i.time}}">{{i.time}}</p>
+                     
+                    </td>
+                    <td>{{i.job_enabled}}</td>
+                    <td>{{i.freq_recurrence_factor}}</td>
+                    <td>{{i.frequency}}</td>
+                    <td>{{i.Days}}</td>
+                    
+                    
+                </tr>
+                
+              {% endfor %}
+                
+        </table>
+        <script>
+          $(document).ready(function () {
+              $('#example').DataTable();
+          });
+        </script>
+        
+        </div>
+      </div>
+    </div>
+
+    <div id="hero-carousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+
+      <div class="carousel-item active" style="background-image: url(../../static/img/556.jpg);">
+      </div>
+      
+
+    </div>
+    <div id="hero-carousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+
+      <div class="carousel-item active" style="background-image: url(../../static/img/556.jpg);">
+      </div>
+      
+
+    </div>
+    <div id="hero-carousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+
+      <div class="carousel-item active" style="background-image: url(../../static/img/556.jpg);">
+      </div>
+      
+
+    </div>
+    <div id="hero-carousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+
+      <div class="carousel-item active" style="background-image: url(../../static/img/556.jpg);">
+      </div>
+      
+
+    </div>
+    <div id="hero-carousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+
+      <div class="carousel-item active" style="background-image: url(../../static/img/556.jpg);">
+      </div>
+      
+
+    </div>
+
+  </section>
+
+  
+
+  <!-- Template Main JS File -->
+  <script src="{% static 'js/main.js' %}"></script>
+  <script>
+    {% for msg in messages %} 
+      swal("Server Response", "{{msg}}");
+   {% endfor %} 
+  </script>
+
+</body>
+
+</html>

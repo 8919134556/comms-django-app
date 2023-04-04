@@ -1,0 +1,17 @@
+configparser
+Django
+django-mathfilters
+email-to       
+mssql-django 
+notifiers      
+numpy           
+pandas         
+PyAutoGUI       
+PyGetWindow    
+pymssql        
+pyodbc          
+requests        
+setuptools      
+urllib3          
+wheel           
+sockets

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <link href="{% static 'css/page_style.css' %}" rel="stylesheet" />
+    <script src="{% static 'js/sweetalert.js' %}"></script>
+    <title>Login-page</title>
+</head>
+<body>
+   <section>
+      <div id="container">
+         <header>Login account</header>
+         <form method="post" enctype="multipart/form-data">
+         {% csrf_token %}
+            <fieldset>
+            <br/>
+            <select id="Select" name="user" required onchange="SelectRole()">
+               <option value="">---Select Role---</option>
+               <option value="Admin">Admin</option>
+               <option value="Sub-Admin">Sub-Admin</option>
+               <option value="user">User</option>
+            </select>
+            <br/>
+               <select name="server" style="margin-left: 25%; margin-top: 5%;" id="server">
+                  {% for i in view %}
+                  <option>{{i.server_name}}</option>
+                  {% endfor %}
+               </select>
+               
+            <br/>
+               <input class="mt-3" type="email" name="email"  placeholder="E-mail" required>
+               <br/><br/>
+               <input class="mt-3" type="password" name="pws" id="password" placeholder="Password" required>
+               <br/><br/>
+               <input class="mt-3" type="checkbox" onclick="myFunction()"> Show password
+               <br/><br/>
+               <input class="mt-3" type="submit" id="submit" name="submit" value="Login">
+               <br/>
+               <a href="{% url 'forgot_password' %}">Forgot Password</a>
+            </fieldset>
+         </form>       
+      </div>
+   </section>
+   <script>
+    {% for msg in messages %} 
+      swal("Server Response", "{{msg}}");
+   {% endfor %} 
+</script>
+<script>
+   document.getElementById("server").style.display = "none";
+   function SelectRole() {
+       var x = document.getElementById("Select").value;
+       if(x=="Sub-Admin"){
+         document.getElementById("server").style.display = "block";  
+       }
+       else{
+         document.getElementById("server").style.display = "none";
+       }
+   }
+</script>
+<script>
+   function myFunction() {
+     var x = document.getElementById("password");
+     if (x.type === "password") {
+       x.type = "text";
+     } else {
+       x.type = "password";
+     }
+   }
+   </script>
+ </body>
+</html>

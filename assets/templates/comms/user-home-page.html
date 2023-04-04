@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>User-home-page</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="{% static 'img/monitor.png' %}" rel="icon">
+  <script src="{% static 'js/sweetalert.js' %}"></script>
+  <!-- <script src="http://code.jquery.com/jquery-latest.js"></script> -->
+      <!-- <script type="text/javascript">
+        setInterval("my_function();",5000); 
+        function my_function(){
+          $('#refresh').load(location.href + ' #time');
+        }
+      </script> -->
+ 
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600;1,700&family=Roboto:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Work+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+    rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+
+
+  <!-- Template Main CSS File -->
+  <link href="{% static 'css/main.css' %}" rel="stylesheet">
+
+
+</head>
+
+<body>
+
+  <!-- ======= Header ======= -->
+  <header id="header" class="header d-flex align-items-center">
+    <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
+
+      <a href="index.html" class="logo d-flex align-items-center">
+        <!-- Uncomment the line below if you also wish to use an image logo -->
+        <!-- <img src="assets/img/logo.png" alt=""> -->
+        <h1><span style="color: blue;">INFO</span> <span style="color: red;">TRACK</span></h1>
+      </a>
+
+      <i class="mobile-nav-toggle mobile-nav-show bi bi-list"></i>
+      <i class="mobile-nav-toggle mobile-nav-hide d-none bi bi-x"></i>
+      <nav id="navbar" class="navbar">
+        <ul>
+          <li>
+            <form id="form_submit" method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              <select name="name" id="myselect" onchange="this.form.submit()">
+                <option>-----select server -----</option>
+                {% for i in list %}
+                  <option value="{{i.server_name}}">{{i.server_name}}</option>
+                  {% endfor %}
+              </select>
+          </form>
+          </li>
+          
+          <li><a href="{% url 'comm_tools' %}">Comms</a></li>
+          <li><a href="{% url 'updater' %}">Updater</a></li>
+          <li><a href="{% url 'sql_jobs' %}">SQL Jobs</a></li>
+
+          <li><a href="#">{{user_name}}</a></li>
+          <li><a href="{% url 'user_logout' %}">Logout</a></li>
+          
+        
+        </ul>
+      </nav>
+      <script>
+        function submitForm() {
+            let form = document.getElementById("form_submit");
+            form.submit();
+        }
+    </script>
+
+    </div>
+  </header>
+
+  <!-- ======= Hero Section ======= -->
+  <section id="hero" class="hero">
+
+    <div class="info d-flex align-items-center">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-6 text-center">
+            <h2 data-aos="fade-down">Welcome to <span>Info Track</span></h2>
+            <p data-aos="fade-up">InfoTrack Telematics is an ISO 9001:2015 Organization, a group company of Zenrin Corporation, a public listed company based in Tokyo, Japan</p>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="hero-carousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+
+      <div class="carousel-item active" style="background-image: url(../../static/img/57.jpg)">
+      </div>
+      
+
+    </div>
+
+  </section><!-- End Hero Section -->
+
+  
+ 
+
+  <!-- Template Main JS File -->
+  <script src="{% static 'js/main.js' %}"></script>
+  <script>
+    {% for msg in messages %} 
+      swal("Server Response", "{{msg}}");
+   {% endfor %} 
+  </script>
+</body>
+
+</html>
